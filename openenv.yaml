@@ -1,0 +1,33 @@
+name: openenv-support-triage
+description: Real-world customer support triage simulation for training/evaluating agentic workflows.
+version: 1.0.0
+license: mit
+tags:
+  - openenv
+  - customer-support
+  - triage
+  - agent-evaluation
+domain: customer-support
+difficulty: mixed
+entrypoint: app.main:app
+api:
+  reset: /reset
+  step: /step
+  state: /state
+  tasks: /tasks
+  grader: /grader
+  baseline: /baseline
+models:
+  observation: openenv_support_triage.models.Observation
+  action: openenv_support_triage.models.Action
+  reward: openenv_support_triage.models.Reward
+tasks:
+  - id: support-easy-001
+    name: Billing + Login Triage
+    difficulty: easy
+  - id: support-medium-001
+    name: Priority SLA Handling
+    difficulty: medium
+  - id: support-hard-001
+    name: Fraud, Policy, and Escalation
+    difficulty: hard
