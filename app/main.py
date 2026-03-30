@@ -6,12 +6,19 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
-from openenv_support_triage.baseline import run_baseline
 from openenv_support_triage.environment import SupportTriageEnv
 from openenv_support_triage.models import Action, BaselineResult, EnvironmentState, StepResponse, TasksResponse
 
 
-load_dotenv()
+def _safe_load_dotenv() -> None:
+    try:
+        load_dotenv()
+    except UnicodeDecodeError:
+        # Ignore malformed local .env files so the API can still start.
+        pass
+
+
+_safe_load_dotenv()
 
 
 class ResetRequest(BaseModel):
@@ -74,6 +81,8 @@ def grader() -> dict:
 def baseline(payload: Optional[BaselineRequest] = None) -> BaselineResult:
     model = payload.model if payload else "gpt-4o-mini"
     try:
+        from openenv_support_triage.baseline import run_baseline
+
         return run_baseline(model=model)
     except RuntimeError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

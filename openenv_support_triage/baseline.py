@@ -12,7 +12,12 @@ from .models import Action, BaselineResult, BaselineTaskResult
 from .tasks import TASKS
 
 
-load_dotenv()
+def _safe_load_dotenv() -> None:
+    try:
+        load_dotenv()
+    except UnicodeDecodeError:
+        # Ignore malformed local .env files and rely on process env vars.
+        pass
 
 
 def _model_action(client: OpenAI, model: str, observation_json: str) -> Action:
@@ -107,6 +112,7 @@ def _deterministic_action(observation: Dict[str, object]) -> Action:
 
 
 def run_baseline(model: str = "gpt-4o-mini", max_steps_multiplier: float = 1.0) -> BaselineResult:
+    _safe_load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
     client: Optional[OpenAI] = OpenAI() if api_key else None
     task_results: List[BaselineTaskResult] = []
