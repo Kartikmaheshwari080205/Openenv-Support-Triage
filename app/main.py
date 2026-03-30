@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
@@ -26,7 +27,7 @@ class ResetRequest(BaseModel):
 
 
 class BaselineRequest(BaseModel):
-    model: str = "gpt-4o-mini"
+    model: str = os.getenv("MODEL_NAME", "gpt-4o-mini")
 
 
 app = FastAPI(title="OpenEnv Support Triage", version="1.0.0")
@@ -79,7 +80,7 @@ def grader() -> dict:
 
 @app.post("/baseline", response_model=BaselineResult)
 def baseline(payload: Optional[BaselineRequest] = None) -> BaselineResult:
-    model = payload.model if payload else "gpt-4o-mini"
+    model = payload.model if payload else os.getenv("MODEL_NAME", "gpt-4o-mini")
     try:
         from openenv_support_triage.baseline import run_baseline
 
