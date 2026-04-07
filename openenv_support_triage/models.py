@@ -107,6 +107,8 @@ class TaskSummary(BaseModel):
     difficulty: Difficulty
     description: str
     objective: str
+    grader: str = "support-ticket-grader"
+    grader_endpoint: str = "/grader"
 
 
 class TasksResponse(BaseModel):

@@ -113,6 +113,8 @@ class SupportTriageEnv:
                     difficulty=task.difficulty,
                     description=task.description,
                     objective=task.objective,
+                    grader="support-ticket-grader",
+                    grader_endpoint="/grader",
                 )
                 for task in TASKS
             ],
