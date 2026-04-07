@@ -15,6 +15,29 @@ def infer(model: str | None = None) -> Dict[str, Any]:
     return result.model_dump()
 
 
+def _print_structured_output(payload: Dict[str, Any]) -> None:
+    model_name = str(payload.get("model", "unknown"))
+    task_results = payload.get("task_results", [])
+    average_score = payload.get("average_score", 0.0)
+
+    print(f"[START] task=openenv-support-triage model={model_name}", flush=True)
+
+    for index, task_result in enumerate(task_results, start=1):
+        task_id = str(task_result.get("task_id", f"task-{index}"))
+        score = task_result.get("score", 0.0)
+        steps = task_result.get("steps", 0)
+        done = str(task_result.get("done", False)).lower()
+        print(
+            f"[STEP] step={index} task={task_id} score={score} steps={steps} done={done}",
+            flush=True,
+        )
+
+    print(
+        f"[END] task=openenv-support-triage score={average_score} steps={len(task_results)}",
+        flush=True,
+    )
+
+
 def main() -> None:
     load_dotenv()
     default_model = os.getenv("MODEL_NAME", "gpt-4o-mini")
@@ -24,6 +47,7 @@ def main() -> None:
     args = parser.parse_args()
 
     payload = infer(model=args.model)
+    _print_structured_output(payload)
     print(json.dumps(payload, indent=2))
 
 
