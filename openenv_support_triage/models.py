@@ -102,13 +102,17 @@ class StepResponse(BaseModel):
 
 
 class TaskSummary(BaseModel):
+    id: str
     task_id: str
     name: str
     difficulty: Difficulty
     description: str
     objective: str
-    grader: str = "support-ticket-grader"
-    grader_endpoint: str = "/grader"
+    grader: Dict[str, str] = {
+        "id": "support-ticket-grader",
+        "endpoint": "/grader",
+        "type": "deterministic",
+    }
 
 
 class TasksResponse(BaseModel):

@@ -25,15 +25,24 @@ tasks:
   - id: support-easy-001
     name: Billing + Login Triage
     difficulty: easy
-    grader: support-ticket-grader
+    grader:
+      id: support-ticket-grader
+      endpoint: /grader
+      type: deterministic
   - id: support-medium-001
     name: Priority SLA Handling
     difficulty: medium
-    grader: support-ticket-grader
+    grader:
+      id: support-ticket-grader
+      endpoint: /grader
+      type: deterministic
   - id: support-hard-001
     name: Fraud, Policy, and Escalation
     difficulty: hard
-    grader: support-ticket-grader
+    grader:
+      id: support-ticket-grader
+      endpoint: /grader
+      type: deterministic
 graders:
   - id: support-ticket-grader
     type: deterministic

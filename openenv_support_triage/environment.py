@@ -108,13 +108,17 @@ class SupportTriageEnv:
         return TasksResponse(
             tasks=[
                 TaskSummary(
+                    id=task.task_id,
                     task_id=task.task_id,
                     name=task.name,
                     difficulty=task.difficulty,
                     description=task.description,
                     objective=task.objective,
-                    grader="support-ticket-grader",
-                    grader_endpoint="/grader",
+                    grader={
+                        "id": "support-ticket-grader",
+                        "endpoint": "/grader",
+                        "type": "deterministic",
+                    },
                 )
                 for task in TASKS
             ],
