@@ -10,6 +10,14 @@ from dotenv import load_dotenv
 from openenv_support_triage.baseline import run_baseline
 
 
+def _resolve_runtime_env() -> Dict[str, str | None]:
+    return {
+        "api_base_url": os.getenv("API_BASE_URL"),
+        "api_key": os.getenv("HF_TOKEN") or os.getenv("OPENAI_API_KEY"),
+        "model_name": os.getenv("MODEL_NAME", "gpt-4o-mini"),
+    }
+
+
 def infer(model: str | None = None) -> Dict[str, Any]:
     result = run_baseline(model=model)
     return result.model_dump()
@@ -40,7 +48,8 @@ def _print_structured_output(payload: Dict[str, Any]) -> None:
 
 def main() -> None:
     load_dotenv()
-    default_model = os.getenv("MODEL_NAME", "gpt-4o-mini")
+    runtime_env = _resolve_runtime_env()
+    default_model = str(runtime_env["model_name"] or "gpt-4o-mini")
 
     parser = argparse.ArgumentParser(description="Run baseline inference for OpenEnv support triage")
     parser.add_argument("--model", default=default_model, help="Model name to evaluate")
